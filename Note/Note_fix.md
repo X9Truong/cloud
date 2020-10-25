@@ -1,3 +1,4 @@
+```
 Failed to start LSB: Bring up/down networking.
 
 systemctl stop NetworkManager
@@ -27,3 +28,4 @@ config --list
 
 
 sudo kill `sudo lsof -t -i:8989`
+```
