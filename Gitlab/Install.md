@@ -108,7 +108,7 @@ gitlab Reconfigured!
 
 
 Thank you for installing GitLab!
-GitLab should be available at http://192.168.239.200
+GitLab should be available at http://192.168.138.200
 
 For a comprehensive list of configuration options please see the Omnibus GitLab readme
 https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md
@@ -123,7 +123,7 @@ Complete!
 
 * Seting basic for gitlab
 
-`http://192.168.239.200/`
+`http://192.168.138.200/`
 
 `Change password`
 
@@ -132,4 +132,80 @@ From now on, use the below credentials to log in as the administrator:
 
 Username: root
 Password: <your-new-password>
+```
+
+* Configure GitLab URL
+
+```
+cd /etc/gitlab/
+vim gitlab.rb
+external_url 'http://gitlab.hakase-labs.co'
+```
+
+* Generate SSL Let's encrypt and DHPARAM certificate
+
+```
+yum -y install letsencrypt
+
+letsencrypt certonly --standalone -d gitlab.hakase-labs.co
+```
+
+* Next, create new 'ssl' directory under the GitLab configuration directory '/etc/gitlab/'.
+
+
+`mkdir -p /etc/gitlab/ssl/`
+
+```
+sudo openssl dhparam -out /etc/gitlab/ssl/dhparams.pem 2048
+chmod 600 /etc/gitlab/ssl/*
+```
+
+* Enable Nginx HTTPS for GitLab
+
+
+```
+cd /etc/gitlab/
+vim gitlab.rb
+And change HTTP to HTTPS on the external_url line.
+external_url 'https://gitlab.hakase-labs.co'.
+
+Then paste the following configuration under the 'external_url' line configuration.
+
+
+nginx['redirect_http_to_https'] = true
+nginx['ssl_certificate'] = "/etc/letsencrypt/live/gitlab.hakase-labs.co/fullchain.pem"
+nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/gitlab.hakase-labs.co/privkey.pem"
+nginx['ssl_dhparam'] = "/etc/gitlab/ssl/dhparams.pem"
+
+```
+Finally, apply the GitLab configuration using the following command.
+
+
+`gitlab-ctl reconfigure`
+
+* Install gitlab runner
+
+```
+# Download the binary for your system
+sudo curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+
+# Give it permissions to execute
+sudo chmod +x /usr/local/bin/gitlab-runner
+ln -s /usr/local/bin/gitlab-runner /usr/bin/gitlab-runner
+echo "gitlab-runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Create a GitLab CI user
+sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+
+# Install and run as service
+sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+sudo gitlab-runner start
+```
+
+* Change other user use gitlab runner
+
+```
+vim /etc/systemd/system/gitlab-runner.service
+[Service]
+User=myuser
 ```
