@@ -209,3 +209,31 @@ vim /etc/systemd/system/gitlab-runner.service
 [Service]
 User=myuser
 ```
+
+* install docker on server
+
+`curl -sSL https://get.docker.com | sudo sh`
+
+* Add user to docker group
+
+```
+sudo usermod -aG docker $(whoami)
+sudo usermod -aG docker gitlab-runner
+```
+`before_script` – ý là trước khi thực hiện script. Ở đây ta khai báo before_script ở “root level” nên nó sẽ được áp dụng cho tất cả các job.
+
+
+* Shared runners pipeline minutes quota
+
+```
+To change the pipelines minutes quota:
+
+Go to Admin Area > Settings > CI/CD.
+Expand Continuous Integration and Deployment.
+In the Pipeline minutes quota box, enter the maximum number of minutes.
+Click Save changes for the changes to take effect.
+```
+https://docs.gitlab.com/ee/user/admin_area/settings/continuous_integration.html#shared-runners-pipeline-minutes-quota
+
+
+
