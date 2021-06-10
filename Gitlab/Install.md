@@ -235,5 +235,7 @@ Click Save changes for the changes to take effect.
 ```
 https://docs.gitlab.com/ee/user/admin_area/settings/continuous_integration.html#shared-runners-pipeline-minutes-quota
 
+https://docs.gitlab.com/runner/install/docker.html
+
 
 
