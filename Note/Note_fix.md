@@ -29,3 +29,17 @@ config --list
 
 sudo kill `sudo lsof -t -i:8989`
 ```
+
+Turning gitlab
+
+* Storing Git data in an alternative directory
+
+```
+git_data_dirs({
+  "default" => { "path" => "/var/opt/gitlab/git-data" },
+  "alternative" => { "path" => "/mnt/nas/git-data" }
+})
+```
+
+gitlab_rails['backup_path'] = your_path
+

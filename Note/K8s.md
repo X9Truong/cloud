@@ -68,6 +68,150 @@ sudo kubeadm init --apiserver-advertise-address=192.168.30.128 --pod-network-cid
 
 kubeadm join 192.168.30.128:6443 --token gyjp2p.gxq4gj9neveitl4y --discovery-token-ca-cert-hash sha256:a7acb1f8e6769d1adaf5d09041d67871b753536135350ed325a8cccbc926eba6
 ```
+```
+vim create_pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata: 
+	name: hello-pod
+spec: 
+		containers:
+		- name: hell-nginx
+		  image: nginx
+		  
+```
+
+`kubectl apply -f create_pod.yml`
+
+`kubectl describe pod`
+
+`kubectl get pod`
+
+* Deployment controller -> Replicaset controller -> pod -> nginx
+
+`kubectl run hell-nginx --image nginx`
+
+`kubectl get all`
+
+`kubectl scale deployment hell-nginx --replicas 5`
+
+### Creating and exploring an nginx deployment 
+
+```
+vim apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+
+* Create a Deployment based on the YAML file:
+
+` kubectl apply -f https://k8s.io/examples/application/deployment.yaml`
+
+* Display information about the Deployment:
+
+` kubectl describe deployment nginx-deployment`
+
+* List the Pods created by the deployment:
+
+`kubectl get pods -l app=nginx`
+
+* Display information about a Pod:
+
+`kubectl describe pod <pod-name>`
+
+### Updating the deployment
+
+```
+vim apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.16.1 # Update the version of nginx from 1.14.2 to 1.16.1
+        ports:
+        - containerPort: 80
+```
+* Apply the new YAML file:
+
+`kubectl apply -f https://k8s.io/examples/application/deployment-update.yaml`
+
+* Watch the deployment create pods with new names and delete the old pods:
+
+`kubectl get pods -l app=nginx`
+
+### Scaling the application by increasing the replica count
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 4 # Update the replicas from 2 to 4
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+		
+`kubectl apply -f https://k8s.io/examples/application/deployment-scale.yaml`
+
+* Deleting a deployment
+
+`kubectl delete deployment nginx-deployment`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
