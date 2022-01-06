@@ -217,5 +217,9 @@ ex in.txt '+%s/.*/<before> & and <after each line>/' '+wq out.txt'
 vi in.txt '+%s/.*/<before> & and <after each line>/' '+wq! out.txt'
 ```
 
-
+```
+ip route get 1 | sed 's/^.*src \([^ ]*\).*$/\1/;q'
+/usr/sbin/ip route get 1 | awk '{print $NF;exit}'
+Get ip
+```
  

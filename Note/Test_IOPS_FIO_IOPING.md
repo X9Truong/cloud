@@ -139,3 +139,9 @@ Như vậy, với bài hướng dẫn này, hy vọng giúp các bạn có thêm
 
 `#/bin/bash
 nohup ioping -W /opt/ | while read pong; do echo "$(date): $pong"; done >> /opt/backup/testdisk/log_disk_$(date +%Y%m%d).dams003.log &`
+
+
+```
+fio -filename=test2g -direct=1 -rw=randrw -rwmixwrite=80 -bs=4k -size=2G -numjobs=1 -runtime=10 -group_reporting -name=file1 --ioengine=libaio
+fio -filename=test2g -direct=1 -rw=randrw -rwmixwrite=80 -bs=4k -size=2G -numjobs=1 -runtime=10 -group_reporting -name=file1 --ioengine=libaio --iodepth=64
+```

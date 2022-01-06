@@ -90,7 +90,7 @@ spec:
 
 * Deployment controller -> Replicaset controller -> pod -> nginx
 
-`kubectl run hell-nginx --image nginx`
+`kubectl run hello-nginx --image nginx`
 
 `kubectl get all`
 
