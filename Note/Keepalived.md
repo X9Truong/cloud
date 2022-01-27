@@ -2,14 +2,14 @@
 
 Keepalived là một chương trình dịch vụ trên Linux cung cấp khả năng tạo độ sẵn sàng cao (High Availability) cho hệ thống dịch vụ và khả năng cân bằng tải (Load Balancing) đơn giản.
 
-<img src="/img/keepalived-1.png">
+<img src="/Note/img/keepalived-1.png">
 
 * Keepalived cung cấp các bộ thư viện (framework) cho 2 chức năng chính là: cân bằng tải (load balancing) cùng cơ chế health checking và độ sẵn sàng cao cho hệ thống (high availability) với VRRP .
 * Tính năng cân bằng tải sử dụng Linux Virtual Server (IPVS) module kernel trên Linux.
 * Tính năng kiểm tra tình trạng sức khoẻ của các máy chủ backend cũng khá linh động giúp duy trì được pool server dịch vụ nào còn sống để cân bằng tải tốt.
 * Tính sẵn sàng cao (HA) sẽ được Keepalived sử dụng kĩ thuật giao thức khá nổi tiếng VRRP (Virtual Redundancy Routing Protocol). VRRP được ứng dụng nhiều trong mô hình router failover, bạn có thể đọc thêm tài liệu VRRP của Cisco.
 
-<img src="/img/keepalived-2.png">
+<img src="/Note/img/keepalived-2.png">
 
 Tóm gọn lại thì Keepalived cho bạn 2 chức năng gồm:
 
@@ -22,12 +22,12 @@ Tóm gọn lại thì Keepalived cho bạn 2 chức năng gồm:
 
 - Các máy chủ dịch vụ sử dụng chung VIP phải liên lạc với nhau bằng địa chỉ multicast 224.0.0.18 bằng giao thức VRRP. Các máy chủ sẽ có độ ưu tiên (priority) trong khoảng từ 1 – 254, và máy chủ nào có độ ưu tiên cao nhất sẽ thành Master, các máy chủ còn lại sẽ thành các Slave/Backup, hoạt động ở chế độ chờ.
 
-<img src="/img/keepalived-3.1.png">
+<img src="/Note/img/keepalived-3.1.png">
 
 
 - Như đã nói ở trên, các server dịch vụ dùng chung Virtual IP sẽ có 2 trạng thái là MASTER/ACTIVE và BACKUP/SLAVE. Cơ chế failover được xử lý bởi giao thức VRRP, khi khởi động dịch vụ, toàn bộ các server cấu hình dùng chung VIP sẽ gia nhập vào một nhóm multicast. Nhóm multicast này dùng để gởi/nhận các gói tin quảng bá VRRP. Các server sẽ quảng bá độ ưu tiên (priority) của mình, server với độ ưu tiên cao nhất sẽ được chọn làm MASTER. Một khi nhóm đã có 1 MASTER thì MASTER này sẽ chịu trách nhiệm gởi các gói tin quảng bá VRRP định kỳ cho nhóm multicast.
 
-<img src="/img/keepalived-3.2.png">
+<img src="/Note/img/keepalived-3.2.png">
 
 - Nếu vì một sự cố gì đó mà các server BACKUP không nhận được các gói tin quảng bá từ MASTER trong một khoảng thời gian nhất định thì cả nhóm sẽ bầu ra một MASTER mới. MASTER mới này sẽ tiếp quản địa chỉ VIP của nhóm và gởi các gói tin ARP báo là nó đang giữ địa chỉ VIP này. Khi MASTER cũ hoạt động bình thường trở lại thì server này có thể lại trở thành MASTER hoặc trở thành BACKUP tùy theo cấu hình độ ưu tiên của các router.
 
@@ -56,7 +56,7 @@ Tóm gọn lại thì Keepalived cho bạn 2 chức năng gồm:
 
 ### Kiến trúc chương trình Keepalived
 
-<img src="/img/keepalived-4.png">
+<img src="/Note/img/keepalived-4.png">
 
 ### 1. WatchDog
 

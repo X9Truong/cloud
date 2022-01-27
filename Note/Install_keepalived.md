@@ -4,11 +4,11 @@
 
 - Trong mô hình lab của bài này, ta sẽ có 2 Nginx Web Server (bạn có thể đổi thành HAProxy tùy ý) phục vụ xử lý request HTTP Web cơ bản. Hai Nginx WEB1 và WEB2 này sẽ được cấu hình dùng chung một VIP là 10.12.166.80. Bình thường thì VIP này sẽ do node Master phụ trách, node Backup sẽ ở trạng thái chờ.
 
-<img src="/img/lab-keepalived-nginx-1.jpg">
+<img src="/Note/img/lab-keepalived-nginx-1.jpg">
 
 - Khi có sự cố xảy ra với node Master như die server hay dịch vụ die thì node Backup sẽ nhận lấy VIP này và chịu trách nhiệm xử lý tiếp nội dung dịch vụ đang chạy cụ thể ở bài lab này là Nginx Web Server.
 
-<img src="/img/lab-keepalived-nginx-2.jpg">
+<img src="/Note/img/lab-keepalived-nginx-2.jpg">
 
 ### 2. Cài đặt keepalived
 
@@ -207,7 +207,7 @@ service iptables save
 
 - Check website with IP VIP:
 
-<img src="/img/web_1.png">
+<img src="/Note/img/web_1.png">
 
 ### 5. Check log
 
@@ -297,7 +297,7 @@ Jan 18 18:41:26 mail02 Keepalived_vrrp[7213]: Sending gratuitous ARP on ens32 fo
 
 - Check website with IP VIP:
 
-<img src="/img/web_2.png">
+<img src="/Note/img/web_2.png">
 
 --> Keepalived change to host slave
 
