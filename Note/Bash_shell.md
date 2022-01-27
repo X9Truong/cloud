@@ -127,11 +127,38 @@ fi
 ```
 
 
+```
+#!/bin/bash
 
+file="image.jpg"
+name=${file%.*}
+extension=${file#*.}
 
+echo "File Name: $name"
+echo "File Extension: $extension"
 
+Output: 
+File Name: image
+File Extension: jpg
+```
 
+```
+How to rename files with extension *.jpg in current directory using shell script
 
+#!/bin/bash
+
+step=1
+for pic in `find . -maxdepth 1 -iname '*.jpg' -type f`
+do
+   new=image-$step.${pic##*.}
+   echo "Renaming $pic to $new"
+   mv "$pic" "$new"
+   let step++
+done
+
+Renaming ./car.jpg to image-1.jpg
+Renaming ./bike.jpg to image-2.jpg
+```
 
 
 
