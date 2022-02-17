@@ -297,7 +297,7 @@ Jan 18 18:41:26 mail02 Keepalived_vrrp[7213]: Sending gratuitous ARP on ens32 fo
 
 - Check website with IP VIP:
 
-<img src="/Note/img/web_2.png">
+<img src="/img/web_2.png">
 
 --> Keepalived change to host slave
 
@@ -346,7 +346,7 @@ This value is used by Keepalived to take action. Scripts are defined like this:
 vrrp_script chk_myscript {
   script       "/usr/local/bin/mycheckscript.sh"
   interval 2   # check every 2 seconds
-  fall 2       # require 2 failures for OK
+  fall 2       # require 2 failures for KO
   rise 2       # require 2 successes for OK
 }
 ```
