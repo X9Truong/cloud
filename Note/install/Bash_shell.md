@@ -161,15 +161,102 @@ Renaming ./bike.jpg to image-2.jpg
 ```
 
 
+```
+case “$luachon” in
+   giatrimau_1) Các câu lệnh ;;
+   giatrimau_2) Các câu lệnh ;;
+   giatrimau_n) Các câu lệnh ;;
+   *) Câu lệnh cho TH còn lại ;; (Giống default trong C/C++)
+esac
+```
 
 
+```
+case "$1" in
+  1) echo 'Monday' ;;
+  2) echo 'Tuesday' ;;
+  3) echo 'Wednesday' ;;
+  4) echo 'Thursday' ;;
+  5) echo 'Friday' ;;
+  6) echo 'Saturday' ;;
+  7) echo 'Sunday' ;;
+  *)
+  echo "Don't match anything"
+  exit 1
+;;
+esac
+case "$1" in
+  start | up)
+    vagrant up
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|ssh}"
+    ;;
+esac
+```
+```
+for i in {1..5}; do
+    echo "Welcome $i"
+done
+# lặp từ 5 -> 50 với mỗi step nhảy có giá trị 5 đơn vị.
+for i in {5..50..5}; do
+    echo "Welcome $i"
+done
+```
 
+- while: chủ yếu sử dụng vòng lặp này khi ta muốn thực thi một tập lệnh lặp đi lặp lại nhiều lần trong khi điều kiện vẫn còn đúng. (Ở phần điều kiện nếu là true thì vòng lặp while sẽ được thực thi)
 
+```
+a=0
+while [ $a –le 5 ]
+do
+  echo $a
+  a=$((
+```
+- Vòng while dùng để đọc file:
 
+```
+< file.txt | while read line;
+do
+  echo $line
+done
+```
 
+- select: vòng lặp cung cấp một danh sách menu từ một tập các phần tử được cho có đánh số ở đầu để lựa chọn. (Đây là vòng lặp có sẵn trong ksh được điều chỉnh vào bash. Nó không có sẵn trong bash
 
+```
+#!/bin/bash
+select brand in Samsung Sony iphone symphony Walton
+do
+echo "You have chosen $brand"
+done
+select DRINK in tea cofee water juice appe all none
+do
+   case $DRINK in
+     tea|cofee|water|all)
+        echo "Go to canteen"
+        ;;
+     juice|appe)
+        echo "Available at home"
+        ;;
+     none)
+        break
+        ;;
+     *) echo "ERROR: Invalid selection"
+        ;;
+  esac
+done
+```
+- until: ngược lại với while, vòng lặp này sẽ thực thi tập lệnh của nó khi giá trị điều kiện là sai. Nó sẽ chạy tới khi thỏa mãn điều kiện là đúng.
 
-
+```
+a=0
+until [ ! $a –le 5 ]
+do
+  echo $a
+  a=$(($a + 1))
+done
+```
 
 
 
