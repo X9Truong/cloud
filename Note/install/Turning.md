@@ -52,9 +52,11 @@ root       soft    nproc     unlimited
 ```
 touch /var/log/cmd_history
 chmod 0666 /var/log/cmd_history
-echo "export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S `whoami` `tty`] `history 1 | { read x cmd; echo "$cmd"; }`"; } \
-     >> /var/log/cmd_history'" >> /etc/profile
+/etc/profile
+export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S `whoami` `tty`] `history 1 | { read x cmd; echo "$cmd"; }`"; } \
+     >> /var/log/cmd_history'
 source /etc/profile
+
 ```
 * Cài đặt package
 
