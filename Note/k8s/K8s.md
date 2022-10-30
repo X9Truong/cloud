@@ -41,13 +41,17 @@ EOF
 * Install Kubeadm and Docker
 
 ```
+swapoff -a && sed -i '/swap/d' /etc/fstab
+swapoff -a
+
 yum install kubeadm docker -y 
 
 systemctl enable kubelet
 systemctl start kubelet
 systemctl enable docker
 systemctl start docker
-swapoff -a
+
+
 ```
 
 *  Update Iptables Settings

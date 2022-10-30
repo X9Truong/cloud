@@ -969,9 +969,4 @@ we have three tasks here
 Task1task is to lookup only Sarav’s records from the employees dataset
 Task2 is to lookup Hanu’s records first and then to look up his email ID using the third argument
 Task3  is to lookup Gopi’s records first and then to select his city using third argument
-
 		
- 
-
-  
-

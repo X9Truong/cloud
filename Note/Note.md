@@ -282,25 +282,218 @@ redis.history.password={{REDIS_ENC_PASS}}
 ```
 
 
+```
+yum install -y httpd-tools
+htpasswd -c /etc/nginx/.htpasswd nginx
+cat /etc/nginx/.htpasswd
+nano /etc/nginx/nginx.conf
+```
+server {
+	listen       80 default_server;
+	listen       [::]:80 default_server;
+	server_name  _;
+	root         /usr/share/nginx/html;
+
+	auth_basic "Private Property";
+	auth_basic_user_file /etc/nginx/.htpasswd;
+```
+
+`systemctl reload nginx`
+
+* Kích hoạt mode debug docker
+
+```
+# vi /etc/docker/daemon.json
+{
+"debug": true
+}
+
+systemctl restart docker
+
+docker info | grep -i debug.*server
+
+tail -f /var/log/messages | grep -i docker
+```
+
+
+```
+---
+- name: filter test
+  hosts: localhost
+  vars: 
+    
+    names: [ {
+        "first": "Paul",
+        "last": "Thompson",
+        "mobile": "+1-234-31245543",
+        "ctc": "100000",
+        "address": {
+          "city": "LasVegas",
+          "country": "USA"
+        }
+      },
+      {
+        "first": "Rod",
+        "last": "Johnson",
+        "mobile": "+1-584-31551209",
+        "ctc": "300000",
+        "address": {
+          "city": "Boston",
+          "country": "USA"
+        }
+      },
+      {
+        "first": "Sarav",
+        "last": "AK",
+        "mobile": "+919876543210",
+        "ctc": "200000",
+        "address": {
+          "city": "Chennai",
+          "country": "India"
+        }
+      }]
+  tasks:
+  
+  # Map Filter only selective attributes from list of objects [{},{}]
+  - name: Select and Extract only the cities 
+    debug: 
+      msg="{{ names | map(attribute='address') | map(attribute='city')}}"
+  # using attirubtes with list of objects [{},{}] - Selecting only mobile numbers
+  - name: Select and Extract only mobile numbers
+    debug:
+      msg: "{{ names | map(attribute='mobile') }}"
+  # Select Attributes Joined with Comma in Singleline ( By Default it returns a List)
+  - debug: msg={{ names | map(attribute='first') | join(',') }} 
+  - debug: msg={{ names | map(attribute='last') | join(',') }} 
+  # Convert the lastname to uppercase
+  - debug: msg={{ names | map(attribute='last') | map('upper') }} 
+  # Convert the CTC attriute to float value
+  - debug: msg={{ names | map(attribute='ctc') | map('float') }}
+  # Appending USD to each CTC value and print
+  - debug: msg={{ names | map(attribute='ctc') | product(['USD']) | map('join',' ')}}
+```  
+
+### Backup etcd 
+
+```
+ETCDCTL_API=3 etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  snapshot save /opt/backup/etcd.db
+  
+Check status 
+
+ETCDCTL_API=3 etcdctl --write-out=table snapshot status /opt/backup/etcd.db
+  
+```
+
+
+### Restore etcd Using Snapshot Backup
+
+`ETCDCTL_API=3 etcdctl snapshot restore /opt/backup/etcd.db`
+
+
+If you want to use a specific data directory for the restore, you can add the location using the --data-dir flag as shown below.
+
+`ETCDCTL_API=3 etcdctl --data-dir /opt/etcd snapshot restore /opt/backup/etcd.db`
 
 
 
+```
+CREATE USER 'replica'@'192.%.%.%' IDENTIFIED BY 'R3plic4$';
 
+ALTER USER 'replica'@'192.%.%.%' IDENTIFIED WITH mysql_native_password BY 'R3plic4$';
 
+GRANT REPLICATION SLAVE ON *.* TO 'replica'@'192.%.%.%';
 
+CHANGE MASTER TO
+MASTER_HOST='192.168.30.136',
+MASTER_USER='replica' ,
+MASTER_PASSWORD='R3plic4$',
+MASTER_LOG_FILE='mysql-bin.000001',
+MASTER_LOG_POS=157;
 
+set GLOBAL super_read_only=1;
+select @@global.read_only, @@global.super_read_only;
+```
 
+`https://quantrimang.com/cong-nghe/14-lenh-linux-thu-vi-trong-terminal-160595`
 
+```
+---
+- hosts: mysql
+  gather_facts: no
+  tasks:
+    -  debug:
+#        var: hostvars[inventory_hostname]['groups']['mysql']
+        var: hostvars[inventory_hostname]['groups']['mysql']
+#    - name: Debug
+#      debug:
+#        var: hostvars
+#  tasks:
+#    - debug: var=ansible_host
+    - debug: var=inventory_hostname
+#    - debug: var=hostvars
+    - name: Debug name
+      shell: "ls /opt"
+      register: check
+      changed_when: false
+      when:
+#        - ansible_host == "192.168.30.136"
+        - hostvars[inventory_hostname]['mode'] == "slave"
+    - name: check
+      debug: var=check
+    - name: Debug var mode
+      debug: var=hostvars[inventory_hostname]['MAX_MEMORY']
+    - debug: var=hostvars[inventory_hostname]['zone']
+    - debug: var=hostvars[inventory_hostname]['APP_ID']
+      debug: var=hostvars[inventory_hostname]['launch_target']
 
+all:
+  hosts:
+    localhost:
+      ansible_host: 127.0.0.1
+  children:
+    mysql:
+      hosts:
+        dba:
+          ansible_host: 10.2.3.110
+          mode: active
+          MIN_MEMORY: 2048m
+          MAX_MEMORY: 4096m
+          zone: 1a
+          APP_ID: 1
+          launch_target: "bo.rate.writer.RateWriterStartup"
+          APP_NAME: RateWriter
+        dba2:
+          ansible_host: 10.2.3.111
+          mode: slave
+          MIN_MEMORY: 2048m
+          MAX_MEMORY: 4096m
+          zone: 1b
+          APP_ID: 2
+          launch_target: "bo.rate.writer.RateWriterStartup"
+          APP_NAME: RateWriter
+    nginx:
+      hosts:
+        dba:
+          ansible_host: 10.2.3.110
+          mode: active
+          APP_ID: 3
+          MIN_MEMORY: 1024m
+          MAX_MEMORY: 2048m
+        dba2:
+          ansible_host: 10.2.3.111
+          mode: active
+          APP_ID: 4
+          MIN_MEMORY: 1024m
+          MAX_MEMORY: 2048m
+```
 
-
-
-
-
-
-
-
-
-
-
+```
+gg: go first line
+dG : delete all line
+```		  
 
