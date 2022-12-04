@@ -302,6 +302,8 @@ server {
 
 * Kích hoạt mode debug docker
 
+
+
 ```
 # vi /etc/docker/daemon.json
 {
@@ -313,10 +315,7 @@ systemctl restart docker
 docker info | grep -i debug.*server
 
 tail -f /var/log/messages | grep -i docker
-```
 
-
-```
 ---
 - name: filter test
   hosts: localhost
@@ -371,11 +370,11 @@ tail -f /var/log/messages | grep -i docker
   - debug: msg={{ names | map(attribute='ctc') | map('float') }}
   # Appending USD to each CTC value and print
   - debug: msg={{ names | map(attribute='ctc') | product(['USD']) | map('join',' ')}}
-```  
+ 
 
 ### Backup etcd 
 
-```
+
 ETCDCTL_API=3 etcdctl \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
@@ -417,11 +416,11 @@ MASTER_LOG_POS=157;
 
 set GLOBAL super_read_only=1;
 select @@global.read_only, @@global.super_read_only;
-```
 
-`https://quantrimang.com/cong-nghe/14-lenh-linux-thu-vi-trong-terminal-160595`
 
-```
+
+
+
 ---
 - hosts: mysql
   gather_facts: no
@@ -490,14 +489,14 @@ all:
           APP_ID: 4
           MIN_MEMORY: 1024m
           MAX_MEMORY: 2048m
-```
 
-```
+
+
 gg: go first line
 dG : delete all line
-```
+
 		  
-```
+
 yum -y install bash-completion
 echo 'source <(kubectl completion bash)' >>~/.bashrc
 echo 'alias k=kubectl' >>~/.bashrc
@@ -517,10 +516,10 @@ spec:
   - name: nginx
     image: nginx
   nodeName: kube-01
-```
 
 
-```
+
+
 Commands shared in the PPT
 kubectl run nginx --image=nginx   (deployment)
 kubectl run nginx --image=nginx --restart=Never   (pod)
