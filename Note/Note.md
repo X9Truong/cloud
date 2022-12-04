@@ -370,7 +370,8 @@ tail -f /var/log/messages | grep -i docker
   - debug: msg={{ names | map(attribute='ctc') | map('float') }}
   # Appending USD to each CTC value and print
   - debug: msg={{ names | map(attribute='ctc') | product(['USD']) | map('join',' ')}}
- 
+```
+``` 
 
 ### Backup etcd 
 
@@ -489,9 +490,9 @@ all:
           APP_ID: 4
           MIN_MEMORY: 1024m
           MAX_MEMORY: 2048m
+```
 
-
-
+```
 gg: go first line
 dG : delete all line
 
