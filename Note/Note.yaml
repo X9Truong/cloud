@@ -1,6 +1,5 @@
 ### Turning OS
 
-
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 sudo systemctl disable firewalld
@@ -24,10 +23,10 @@ sysctl -p
 
 * Nếu có lỗi chạy thêm lệnh : modprobe ip_conntrack
  
-`https://www.cyberciti.biz/faq/linux-kernel-etcsysctl-conf-security-hardening/`
+https://www.cyberciti.biz/faq/linux-kernel-etcsysctl-conf-security-hardening/
 
 
-`echo "fs.file-max=500000" >> /etc/sysctl.conf`
+echo "fs.file-max=500000" >> /etc/sysctl.conf
 
 * /etc/security/limits.conf
 
@@ -53,14 +52,14 @@ root       soft    nproc     unlimited
 touch /var/log/cmd_history
 chmod 0666 /var/log/cmd_history
 /etc/profile
-export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S `whoami` `tty`] `history 1 | { read x cmd; echo "$cmd"; }`"; } \
+export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S whoami tty] history 1 | { read x cmd; echo "$cmd"; }"; } \
      >> /var/log/cmd_history'
 source /etc/profile
 
 
 * Cài đặt package
 
-`yum groupinstall "Development Tools" -y`
+yum groupinstall "Development Tools" -y
 
 
 Turning gitlab
@@ -109,7 +108,7 @@ Enter your command symbol, for example, # sign, and press the ESC key. Vim will 
 
 * Uncomment
 
-`:%s/^#/`
+:%s/^#/
 
 * Change network
 
@@ -126,53 +125,53 @@ nmcli con mod ens34 connection.autoconnect yes
 
 * Remove packages
 
-`yum remove`
+yum remove
 
 * Update packages
 
-`yum update httpd`
+yum update httpd
 
 * List packages by yum list
 
-`yum list openssh`
+yum list openssh
 
 * Search packages by yum search
 
-`yum search firefox`
+yum search firefox
 
 * Receive information about packages 
 
-`yum info firefox`
+yum info firefox
 
 * Check update
 
-`yum check-update`
+yum check-update
 
-`yum grouplist`
+yum grouplist
 
-`yum groupinstall 'MySQL Database'`
+yum groupinstall 'MySQL Database'
 
-`yum groupremove 'DNS Name Server'`
+yum groupremove 'DNS Name Server'
 
-`yum groupupdate 'DNS Name Server'`
+yum groupupdate 'DNS Name Server'
 
 * Repo list active
 
-`yum repolist`
+yum repolist
 
-`yum repolist all`
+yum repolist all
 
-`yum clean all`
+yum clean all
 
-`yum history list`
+yum history list
 
 ** Download packages RPM 
 
-`yum install yum-utils -y`
+yum install yum-utils -y
 
-`yumdownloader unbound`
+yumdownloader unbound
 
-`yum localinstall unbound-1.6.6-1.el7.x86_64.rpm`
+yum localinstall unbound-1.6.6-1.el7.x86_64.rpm
 
 ### Stop start daemontools
 
@@ -197,7 +196,7 @@ paste -d '' <(yes '<before>' | head -n $n) \
 <before>line 2</after>
 <before>line 3</after>
 
-`sed 's/.*/<before> & and <after each line>/' input.txt > output.txt`
+sed 's/.*/<before> & and <after each line>/' input.txt > output.txt
 
 
 
@@ -205,9 +204,9 @@ s/x/y/ - thay thế x bởi y
 .* - lấy toàn bộ dòng
 & - nhận văn bản phù hợp
 
-`awk '{print before, $0, after}' before="<before>" after="and <after each line" input.txt > output.txt`
+awk '{print before, $0, after}' before="<before>" after="and <after each line" input.txt > output.txt
 
-`Điều này chỉ in nội dung của biến before, $0 (dòng hiện tại) và biến after, cách nhau bởi khoảng trắng. Các biến được đặt sau biểu thức awk`
+Điều này chỉ in nội dung của biến before, $0 (dòng hiện tại) và biến after, cách nhau bởi khoảng trắng. Các biến được đặt sau biểu thức awk
 
 
 :%s/.*/<before> & and <after each line>/
@@ -298,7 +297,7 @@ server {
 	auth_basic_user_file /etc/nginx/.htpasswd;
 
 
-`systemctl reload nginx`
+systemctl reload nginx
 
 * Kích hoạt mode debug docker
 
@@ -392,12 +391,12 @@ ETCDCTL_API=3 etcdctl --write-out=table snapshot status /opt/backup/etcd.db
 
 ### Restore etcd Using Snapshot Backup
 
-`ETCDCTL_API=3 etcdctl snapshot restore /opt/backup/etcd.db`
+ETCDCTL_API=3 etcdctl snapshot restore /opt/backup/etcd.db
 
 
 If you want to use a specific data directory for the restore, you can add the location using the --data-dir flag as shown below.
 
-`ETCDCTL_API=3 etcdctl --data-dir /opt/etcd snapshot restore /opt/backup/etcd.db`
+ETCDCTL_API=3 etcdctl --data-dir /opt/etcd snapshot restore /opt/backup/etcd.db
 
 
 
@@ -537,7 +536,9 @@ kubectl create service clusterip my-cs --tcp=5678:8080 --dry-run -o yaml
 
 If you use vi you can set the config ':set expandtab' to convert any tabs into spaces.
 
+Create new token:
 
+kubeadm token create --print-join-command
 
 
 vim join_woker_node.sh
@@ -615,6 +616,53 @@ repolist: 5,229
 If no errors are returned, the following can be used to update:
 
 # yum update
+
+# Create labels for node:
+Add Role:
+kubectl label nodes <your_node> kubernetes.io/role=<your_label>
+Remove Role:
+kubectl label node <node name> node-role.kubernetes.io/<role name>-
+
+
+You can also change the label. Just put --overwrite:
+
+kubectl label --overwrite nodes <your_node> kubernetes.io/role=<your_new_label>
+
+kubectl label --overwrite nodes slave-node kubernetes.io/role=worker1
+
+
+Update file hosts in etc
+/etc/ansible/ansible.cfg
+ host_key_checking = False
+---
+- hosts: all
+  gather_facts: no
+  become_user: yes
+  tasks:
+  - name: Set hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+  - name: Add Ansible inventory mappings to /etc/hosts
+    blockinfile:
+      path: /etc/hosts
+      block: |
+        {% for host in groups['all'] %}
+        {{ hostvars[host].ansible_host }} {{ host }}
+        {% endfor %}
+      marker: ""
+  - name: Set authorized key took from file
+    authorized_key:
+      user: root
+      state: present
+      key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+- Show time task ansible
+#/etc/ansible/ansible.cg
+[defaults]
+callback_whitelist = profile_tasks
+
+
+
 
 
 
