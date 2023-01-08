@@ -1,7 +1,9 @@
 ### Linux Kernel /etc/sysctl.conf Security Hardening
-
+<p align="center">
 <img src="/Note/img/linux-logo.PNG">
+</p>
 
+<br>
 * How do I set advanced security options of the TCP/IP stack and virtual memory to improve the security and performance of my Linux based system? How do I configure Linux kernel to prevent certain kinds of attacks using /etc/sysctl.conf? How do I set Linux kernel parameters?
 
 sysctl is an interface that allows you to make changes to a running Linux kernel. With /etc/sysctl.conf you can configure various Linux networking and system settings such as:
