@@ -17,9 +17,11 @@ sysctl is an interface that allows you to make changes to a running Linux kernel
 6. Prevents a cracker from using a spoofing attack against the IP address of the server.
 7. Logs several types of suspicious packets, such as spoofed packets, source-routed packets, and redirects.
 ```
-
+<p align="center">
 <img src="/Note/img/Linux-Kernel-etc-sysctl.PNG">
+</p>
 
+<br>
 Linux Kernel /etc/sysctl.conf Security Hardening with sysctl
 The sysctl command is used to modify kernel parameters at runtime. /etc/sysctl.conf is a text file containing sysctl values to be read in and set by sysct at boot time. To view current values, enter:
 
@@ -239,13 +241,13 @@ net.ipv4.ip_nonlocal_bind=1
 ```
 
 Close and save the file. To load in sysctl settings from the file specified or /etc/sysctl.conf if none given, enter:
-# sysctl -p
+`sysctl -p`
 
 Let us read values from file called /etc/sysctl.d/1000-custom.conf:
 `sudo sysctl -p /etc/sysctl.d/1000-custom.conf
-# OR
+OR
 `sudo sysctl --load=/etc/sysctl.d/1000-custom.conf`
-# OR
+OR
 `sudo sysctl -f /etc/sysctl.d/1000-custom.conf`
 
 
