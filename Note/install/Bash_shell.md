@@ -258,7 +258,144 @@ do
 done
 ```
 
+```
+#/bin/bash
+function slowquery_day(){
+#> /tmp/text
+#for x in `cal | sed 's/"$(date +%Y)"/ /g'| sed 's/[^0-9.]/ /g'| sed 's/'"$(date +%Y)"'/ /g'` ; do echo $x >> /tmp/text;
+#sq=$(cat /tmp/text | wc -l)
+#done
+x=$(date +%d)
+sq=$(date -d "$x day ago" +'%d')
+echo $sq
+echo "Total slowquery server $(hostname)"
+echo "Number slowquery of day:"
 
+seq -f '%02g' 1 $sq > /tmp/txt
+for i in `cat /tmp/txt`
+do
+count=$(cat Gondor-UAT-AMSDB01-slow.log | grep $(date -d "-1 month" +%Y-%m)-$i | wc -l)
+echo "Day $i: $count"
+done
+}
+
+function min_max(){
+cat Gondor-UAT-AMSDB01-slow.log | grep $(date -d "-1 month" +%Y-%m) -C 3 > /tmp/kq
+grep -w Query_time /tmp/kq > /tmp/kq1
+awk '{print $3}' /tmp/kq1 > /tmp/kq2
+a=$(sort -n /tmp/kq2 | tail -1)
+echo "Max time slowquery of month: $a "
+b=$(sort -n /tmp/kq2 | head -1)
+echo "Min time slowquery  of month: $b "
+c=$(cat /tmp/kq2 | wc -l)
+echo "Total slowquery of Month: $c"
+d=$(awk '{s+=($1)} END {print s}' /tmp/kq2)
+time_tb=$(($d/$c))
+echo $time_tb
+echo "Total time slowquery of Month: $d"
+echo "Average period slowquery of the month: $(($d/$c))"
+> /tmp/kq
+> /tmp/kq1
+> /tmp/kq2
+}
+slowquery_day
+min_max
+```
+
+```
+#/bin/bash
+function slowquery_day(){
+#> /tmp/text
+#for x in `cal | sed 's/"$(date +%Y)"/ /g'| sed 's/[^0-9.]/ /g'| sed 's/'"$(date +%Y)"'/ /g'` ; do echo $x >> /tmp/text;
+#sq=$(cat /tmp/text | wc -l)
+#done
+x=$(date +%d)
+sq=$(date -d "$x day ago" +'%d')
+echo "Total slowquery server $(hostname)"
+echo "Number slowquery of day:"
+for k in  {01..09}
+do
+count=$(cat /opt/mysql/data/$(hostname)-slow.log | grep $(date -d "-1 month" +%Y-%m)-$k | wc -l)
+echo "Day $k: $count"
+done
+
+for (( c=10; c<=$sq; c++ ))
+do
+count1=$(cat /opt/mysql/data/$(hostname)-slow.log | grep $(date -d "-1 month" +%Y-%m)-$c | wc -l)
+echo "Day $c: $count1"
+done
+
+}
+
+function min_max(){
+cat /opt/mysql/data/$(hostname)-slow.log | grep $(date -d "-1 month" +%Y-%m) -C 3 > /tmp/kq
+grep -w Query_time /tmp/kq > /tmp/kq1
+awk '{print $3}' /tmp/kq1 > /tmp/kq2
+a=$(sort -n /tmp/kq2 | tail -1)
+echo "Max time slowquery of month: $a "
+b=$(sort -n /tmp/kq2 | head -1)
+echo "Min time slowquery  of month: $b "
+c=$(cat /tmp/kq2 | wc -l)
+echo "Total slowquery of Month: $c"
+d=$(awk '{s+=($1)} END {print s}' /tmp/kq2)
+time_tb=$(($d/$c))
+echo "Total time slowquery of Month: $d"
+echo "Average period slowquery of the month: $(($d/$c))"
+> /tmp/kq
+> /tmp/kq1
+> /tmp/kq2
+}
+slowquery_day
+min_max
+```
+
+```
+#/bin/bash
+function slowquery_day(){
+#> /tmp/text
+#for x in `cal | sed 's/"$(date +%Y)"/ /g'| sed 's/[^0-9.]/ /g'| sed 's/'"$(date +%Y)"'/ /g'` ; do echo $x >> /tmp/text;
+#sq=$(cat /tmp/text | wc -l)
+#done
+#x=$(date +%d)
+sq=$(date -d "$(date +%d) day ago" +'%d')
+echo "Total slow query server $(hostname)"
+echo "Number slow query of day:"
+
+#seq -f '%02g' 1 $sq > /tmp/txt
+#for i in `cat /tmp/txt`
+for (( i=1; i<=$sq; i++ ))
+do
+count=$(cat /opt/mysql/data/$(hostname)-slow.log | grep $(date -d "-1 month" +%Y-%m)-$(printf %02d $i) | grep Time | wc -l)
+echo "Day $(printf %02d $i): $count"
+done
+}
+
+function min_max(){
+cat /opt/mysql/data/$(hostname)-slow.log | grep $(date -d "-1 month" +%Y-%m) -C 3 > /tmp/kq
+grep -w Query_time /tmp/kq > /tmp/kq1
+awk '{print $3}' /tmp/kq1 > /tmp/kq2
+a=$(sort -n /tmp/kq2 | tail -1)
+echo "Max time slow query of month: $a "
+b=$(sort -n /tmp/kq2 | head -1)
+echo "Min time slow query  of month: $b "
+c=$(cat /tmp/kq2 | wc -l)
+echo "Total slow query of Month: $c"
+#d=$(awk '{s+=($1)} END {print s}' /tmp/kq2)
+d=$(awk '{sum+=$1}; END {printf "%.5f\n", sum}'  /tmp/kq2)
+
+#v=$(bc <<<"scale=5;$k/$c")
+calc() { awk "BEGIN{ printf \"%.5f\n\", $* }"; }
+v=$(calc $d/$c)
+
+echo "Total time slow query of Month: $d"
+echo "Average period slow query of the month: $v"
+> /tmp/kq
+> /tmp/kq1
+> /tmp/kq2
+}
+slowquery_day
+min_max
+```
 
 
 

@@ -970,3 +970,191 @@ Task1task is to lookup only Sarav’s records from the employees dataset
 Task2 is to lookup Hanu’s records first and then to look up his email ID using the third argument
 Task3  is to lookup Gopi’s records first and then to select his city using third argument
 		
+# What does the Ansible fetch module do
+
+Ansible’s fetch module transfers files from a remote host to the local host. This is the reverse of the copy module.
+```
+- name: fetch nginx access log
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched
+```	
+By default, the fetched files will be stored in the following way:
+```
+fetched
++-- 123.123.123.123
+¦   +-- var
+¦       +-- log
+¦           +-- nginx
+¦               +-- access.log
++-- 234.234.234.234
+    +-- var
+        +-- log
+            +-- nginx
+                +-- access.log
+```				
+				
+The dest parameter of fetch accepts either an absolute or relative path to the destination folder on the local host. Relative paths are relative to the playbook.
+
+# playbook at /path/to/ansible/playbook.yml
+
+```
+- name: fetch nginx access log (absolute)
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: /path/to/ansible/fetched/absolute
+
+- name: fetch nginx access log (relative)
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched/relative				
+```				
+				
+The tasks above examples above will produce the following file structure:
+```
+/path/to/ansible/fetched
++-- absolute
+¦   +-- 123.123.123.123
+¦   ¦   +-- var
+¦   ¦       +-- log
+¦   ¦           +-- nginx
+¦   ¦               +-- access.log
+¦   +-- 234.234.234.234
+¦       +-- var
+¦           +-- log
+¦               +-- nginx
+¦                   +-- access.log
++-- relative
+    +-- 123.123.123.123
+    ¦   +-- var
+    ¦       +-- log
+    ¦           +-- nginx
+    ¦               +-- access.log
+    +-- 234.234.234.234
+        +-- var
+            +-- log
+                +-- nginx
+                    +-- access.log				
+				
+```
+
+
+How to fetch files from remote hosts
+Set the src and dest parameters to fetch files from remote hosts. Remember that the src parameter is the file path on the remote host and the dest parameter represents where the fetched files will go on the local host.
+```
+- name: fetch nginx access log
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched
+```
+The task above will produce a directory structure like this in the working directory:
+```
+fetched
++-- 123.123.123.123
+¦   +-- var
+¦       +-- log
+¦           +-- nginx
+¦               +-- access.log
++-- 234.234.234.234
+    +-- var
+        +-- log
+            +-- nginx
+                +-- access.log
+```				
+How to strip parent directories from the file path when fetching files
+By default, fetch will store fetched files with the following file structure:
+```
+fetched
++-- 123.123.123.123
+¦   +-- var
+¦       +-- log
+¦           +-- nginx
+¦               +-- access.log
++-- 234.234.234.234
+    +-- var
+        +-- log
+            +-- nginx
+                +-- access.log
+```				
+For each host, fetch will put the file in a directory like {{ inventory_hostname }}/path/to/remote/file, which includes the inventory_hostname and the full file path to the file on the remote host.
+
+If the /var/log/nginx is not important to you, you can remove this from the fetched file by using the flat parameter. This will also remove the {{ inventory_hostname }} from the fetched file. I recommend adding it back in like this (note the trailing slash):
+```
+- name: fetch nginx access log
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched/{{ inventory_hostname }}/
+    flat: true
+```	
+Producing the following file structure:
+```
+fetched
++-- 123.123.123.123
+¦   +-- access.log
++-- 234.234.234.234
+    +-- access.log
+```	
+You could also do something like this:
+```
+- name: fetch nginx access log
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched/access.log.{{ inventory_hostname }}
+    flat: true
+```	
+Which will result in this file structure:
+```
+fetched
++-- access.log.123.123.123.123
++-- access.log.234.234.234.234
+```
+
+How to fetch multiple files in a loop
+Use the loop keyword and {{ item }} to fetch multiple files.
+```
+- name: fetch nginx access and error log
+  fetch:
+    src: /var/log/nginx/{{ item }}.log
+    dest: fetched
+  register: fetch_output
+  loop:
+    - access
+    - error
+fetched
++-- 123.123.123.123
+¦   +-- var
+¦       +-- log
+¦           +-- nginx
+¦               +-- access.log
+¦               +-- error.log
++-- 234.234.234.234
+    +-- var
+        +-- log
+            +-- nginx
+                +-- access.log
+                +-- error.log
+```				
+How to capture fetch module output
+Use the register keyword to capture the output of the fetch module.
+```
+- name: fetch nginx access log
+  fetch:
+    src: /var/log/nginx/access.log
+    dest: fetched
+  register: fetch_output
+
+- debug: var=fetch_output
+```
+
+
+
+
+
+
+
+
+
+
+
+
+	

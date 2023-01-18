@@ -662,6 +662,124 @@ Update file hosts in etc
 callback_whitelist = profile_tasks
 
 
+{% for host in groups['all'] %}
+{{ hostvars['host']['ansible_facts']['default_ipv4']['address'] }}
+{% endfor %}
+
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: check path folder
+    copy:
+      src: /tmp/ams/rw-logs/check.sh
+      dest: "{{ lookup('env', 'PWD') }}"
+
+Note:
+ansible-inventory -i inventory.py --list > /tmp/inventory.json
+ansible-inventory -i /opt/deploy/inventory/inventory.py /opt/deploy/inventory/hosts.yml --list
+ansible -i /opt/deploy/inventory/inventory.py redis  -m debug -a "var=hostvars[groups['redis'][0]].ansible_host"
+
+
+file l:
+IP=$(sed -n $1'p' /etc/ip_server.txt )
+if [ ! -z $IP ] ; then
+   echo $IP
+   ssh $IP
+else
+        cat -n /etc/ip_server.txt
+fi
+
+while true ; do date; lsof -s | awk '{if ($1 == "mysqld" && $9 ~ /\/mysql_tmp/) size+=$7} END {print size}'; echo "============================" ; done > size_tmp.txt
+sar -d 1 86400 -p > sar.txt
+while true ; do date; iostat -dx ; echo "============================" ; done > iostat.txt
+
+#!/bin/bash
+awk '{print $1,$2}' text.txt > kq
+sort kq | sort -u > kq1
+grep "EventTime" kq1 > kq
+sed -nr 's/EventTime.(.*)$/\1/p' kq > kq1
+cut -c 3- kq1
+
+
+ps -ef | grep /opt/redis/src/redis-sentinel  | grep -v grep  |awk  '{print $2}' | xargs echo -e "Number of processes:"							
+
+egrep -v "^[[:blank:]]*(#|$)" Xoa line start # or blank
+
+
+find /opt/fams/fams-web-admin-1.8.15 -type f -exec md5sum '{}' \; | xargs -0 echo md5sum							
+for i in **; do [[ -f "$i" ]] && md5sum "$i" >> md5sum.txt; done							
+
+:g/foo/d - Delete all lines containing the string “foo”. It also removes line where “foo” is embedded in larger words, such as “football”.
+:g!/foo/d - Delete all lines not containing the string “foo”.
+:g/^#/d - Remove all comments from a Bash script. The pattern ^# means each line beginning with #.
+:g/^$/d - Remove all blank lines. The pattern ^$ matches all empty lines.
+:g/^\s*$/d - Remove all blank lines. Unlike the previous command, this also removes the blank lines that have zero or more whitespace characters (\s*).							
+
+chronyc tracking
+chronyc -a makestep							
+
+https://thankinhtoc.vn/bat-mi-10-thoi-quen-giup-ban-tro-thanh-nguoi-gioi-nhat-trong-moi-linh-vuc-nganh-nghe
+
+- name: copy files to destination
+  hosts: localhost
+  connection: local
+  tasks:
+    - block:
+      - name: get properties of src.txt
+        stat:
+          path: files/src.txt
+          checksum_algorithm: sha1
+        register: src_info
+      - name: copy src.txt to dest.txt
+        copy:
+          src: files/src.txt
+          dest: files/dest.txt
+          force: yes
+          checksum:
+        register: copy_out
+      - name: Fail if copy was a failure
+        fail:
+          msg: "Copy failed!"
+        when: src_info.stat.checksum != copy_out.checksum
+      - name: Print Copy successful
+        debug:
+          msg: "Copy Successful!"
+      tags:
+        - checksum
+
+---
+- hosts: mysql
+  gather_facts: no
+  tasks:
+    - block:
+      - name: get properties 
+        shell: md5sum /etc/ansible/check_network.yml
+        delegate_to: localhost        
+        register: src_info        
+      - name: Debug md5sum
+        debug:
+          var: src_info.stdout.split(' ')[0]    
+      - name: copy src.txt to dest.txt
+        copy:
+          src: /etc/ansible/check_network.yml
+          dest: /tmp
+          force: yes
+      - name: get properties  2
+        shell: md5sum /tmp/check_network.yml
+        register: copy_out        
+      - name: Debug md5sum 2
+        debug:
+          var: copy_out.stdout_lines           
+      - name: Fail if copy was a failure
+        fail:
+          msg: "Copy failed!"
+        when: src_info.stdout.split(' ')[0] != copy_out.stdout.split(' ')[0]
+      - name: Print Copy successful
+        debug:
+          msg: "Copy Successful!"
+        when: src_info.stdout.split(' ')[0] == copy_out.stdout.split(' ')[0]
+
 ---
 # tasks file for test
 - name: Copy file
