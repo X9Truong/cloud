@@ -1082,27 +1082,72 @@ spec:
         claimName: myclaim
 
 
+You never know what you can do until you try !!!
+There are times to stay put, and what you want will come to you, and there are times to go out into the world and find such a thing for yourself.
+
+
+sudo curl -OL https://downloads.apache.org/tomcat/tomcat-8/v8.5.69/bin/apache-tomcat-8.5.69.tar.gz
+sudo tar -xvf apache-tomcat-8.5.69.tar.gz 
+
+
+In case of MariaDB use below mentioned queries:
+
+i. Login to mysql database server: - mysql -u root
+
+and then run the following queries in it.
+
+ii. USE mysql;
+
+iii. UPDATE user SET password=PASSWORD('P@ssw0rd123') WHERE User='root' AND Host = 'localhost';
+
+iv. FLUSH PRIVILEGES;
+
+
+In case of MySQL use below mentioned queries:
+
+i. Login to mysql database server: - mysql -u root -p
+
+(enter password what you got from sudo grep 'temporary password' /var/log/mysqld.log command earlier)
+
+and then run the following queries in it.
+
+ii. SET PASSWORD = PASSWORD('P@ssw0rd123');
+
+iii. FLUSH PRIVILEGES;
+
+CREATE USER 'kk_user'@'localhost' IDENTIFIED BY 'S3cure#3214';
+GRANT ALL PRIVILEGES ON kk_db.* TO 'kk_user'@'localhost';
+
+
+cd into /etc/httpd/csr directory and run command: sudo openssl req -new -newkey rsa:2048 -nodes -keyout app01.key -out app01.csr to generate a CSR file.
+
+To verify the entries we used to create a CSR, run the command:
+
+openssl req -noout -text -in app01.csr
 
 
 
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout app01.key -out app01.crt
 
+a. Country Name = SG
 
+b. State or Province Name = Capital Tower
 
+c. Locality Name = CT
 
+d. Organization Name = KodeKloud
 
+e. Organizational Unit Name = Education
 
+f. Common Name = app01.com
 
+g. Email Address = admin@kodekloud.com
 
+For your reference the certificate you created in the previous steps is at /etc/httpd/certs/app01.crt and the key is at /etc/httpd/certs/app01.key. 
+The properties in the file are SSLCertificateFile and SSLCertificateKeyFile. 
 
+To test if server is using correct certificate or not run this command and check if it returns your certificate:
 
-
-
-
-
-
-
-
-
-
+echo | openssl s_client -showcerts -servername app01.com -connect app01:443 2>/dev/null | openssl x509 -inform pem
 
 
