@@ -52,8 +52,7 @@ root       soft    nproc     unlimited
 touch /var/log/cmd_history
 chmod 0666 /var/log/cmd_history
 /etc/profile
-export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S whoami tty] history 1 | { read x cmd; echo "$cmd"; }"; } \
-     >> /var/log/cmd_history'
+export PROMPT_COMMAND='{ date "+[ %Y%m%d %H:%M:%S `whoami` `tty`] `history 1 | { read x cmd; echo "$cmd"; }`"; } >> /var/log/cmd_history.log'
 source /etc/profile
 
 
@@ -1173,5 +1172,53 @@ ExecStart=/usr/local/bin/etcd \\
 --initial-cluster-state new \\
 --data-dir=/var/lib/etcd
 
+
+
+
+mount /dev/cdrom /mnt
+
+cat local.repo
+[LocalRepo]
+name=LocalRepository
+baseurl=file:///mnt/
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+https://www.itzgeek.com/how-tos/linux/centos-how-tos/create-local-yum-repository-on-centos-7-rhel-7-using-dvd.html
+
+
+
+Mount RHEL 8 ISO file / Installation DVD
+mount -o loop rhel-8.0-x86_64-dvd.iso /mnt/
+or In case you have RHEL 8 installation DVD,
+mount /dev/cdrom  /mnt
+
+cp -rp /mnt/media.repo /etc/yum.repos.d/rhel8.repo
+chmod 644 /etc/yum.repos.d/rhel8.repo
+
+vi /etc/yum.repos.d/rhel8.repo
+[InstallMedia-BaseOS]
+name=Red Hat Enterprise Linux 8 - BaseOS
+metadata_expire=-1
+gpgcheck=0
+enabled=1
+baseurl=file:///mnt/BaseOS/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+[InstallMedia-AppStream]
+name=Red Hat Enterprise Linux 8 - AppStream
+metadata_expire=-1
+gpgcheck=0
+enabled=1
+baseurl=file:///mnt/AppStream/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+yum clean all
+
+
+https://www.tecmint.com/create-local-http-yum-dnf-repository-on-rhel-8/
+
+https://www.linuxhelp.com/how-to-configure-mysql-master-master-replication-in-centos-7
 
 
