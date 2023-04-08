@@ -47,7 +47,7 @@ These variables comprise shell variables (variables not in the environment) and 
 </tbody>
 </table>
 
-### File Management
+### 1. File Management
 
 *The commands under this section are very basic commands and must be known to every system administrator. This is definitely not the complete list of Linux commands for file management but can give you a kickstart and can cover most of the basic to complex scenarios.*
 
@@ -209,7 +209,7 @@ This utility does not change the file it searches but simply displays each line 
 </table>
 </div>
 
-### Finding files and directories
+### 2. Finding files and directories
 
 *Most of the time we will end up using find command to find files and directories. But I also like which command as it gives is the path of the binary which is required at multiple events when we are required to execute a binary with complete PATH.*
 
@@ -273,7 +273,7 @@ Before you can use locate (<code>mlocate</code>), the&nbsp;<code>updatedb</code>
 </tbody>
 </table>
 
-### Check User Information
+### 3. Check User Information
 
 <table class="divTable">
 <thead>
@@ -331,7 +331,7 @@ It does not give much information apart from usernames</td>
 </tbody>
 </table>
 
-### Check System Information
+### 4. Check System Information
 
 *As a sytem and Linux administrator you must be familiar with these commands. These will help you determine the type of server you are working on, such as load, cpu model, hardware model, hardware type etc. Some of the commands may be distribution specific such as hwinfo is only available in SuSE Linux while others are expected to be found on almost all distros.*
 
@@ -402,7 +402,7 @@ It does not give much information apart from usernames</td>
 </tbody>
 </table>
 
-### Manage System Processes
+### 5. Manage System Processes
 
 *These Linux commands will help you manage the Linux processes, and will help you troubleshoot any server resource related issues. You can use these commands to monitor your server's resource such as Memory, CPU, disk IO etc.*
 
@@ -490,7 +490,7 @@ It does not give much information apart from usernames</td>
 </tbody>
 </table>
 
-### Managing Users and Groups
+### 6. Managing Users and Groups
 
 *These are some of the basic Linux commands to perform user management such as create, modify, delete user or groups.*
 
@@ -569,7 +569,7 @@ So in this example a normal user is performing network restart using sudo privil
 </tbody>
 </table>
 
-### Managing Permissions
+### 7. Managing Permissions
 
 *Linux permission is a very vast topic and here I have only covered the basic commands which we use to assign/modify/remove permissions to files and directories.*
 
@@ -699,7 +699,7 @@ The 'e' attribute indicates that the file is using extents for mapping the block
 </tbody>
 </table>
 
-### Configure and Troubleshoot Network
+### 8. Configure and Troubleshoot Network
 
 *This section will help Network engineers who are new to Linux environment. I have tried to place the most used commands for network troubleshooting, we also have tcpdump, iperf, netperf and many other networking tools which are used for troubleshooting network related issues but they can get complicated hence those are not mentioned in this list.*
 
@@ -818,7 +818,7 @@ When no option is used ss displays a list of open non-listening sockets (e.g. TC
 </tbody>
 </table>
 
-### Managing Partitions and Logical Volumes.
+### 9. Managing Partitions and Logical Volumes.
 
 *One of the primary roles of system administrator would be to configure partitions, storage layouts in the Linux server. Here you can get the list of most used Linux commands for managing partitions and file systems.*
 
@@ -1022,7 +1022,7 @@ We cannot perform a check on a mounted file system so normally this is performed
 </tbody>
 </table>
 
-### Managing RPM and Software Repositories
+### 10. Managing RPM and Software Repositories
 
 *With package manager such as yum, dnf, apt-get, the life of a system administrator becomes very easy. You can easily install, update, remove packages, upgrade server operating system and much more using these commands.*
 
@@ -1126,7 +1126,7 @@ The handling of repository is slightly different with&nbsp;<code>zypper</code>&n
 </tbody>
 </table>
 
-### Manage logging
+### 11. Manage logging
 
 *Now you know about most of the Linux commands to manager different areas of Linux server but you must be familiar of how logging works in Linux? This may vary based on different distribution, with old distros we used syslog-ng for logging but now almost all major distros have moved to rsyslog solution.*
 
@@ -1162,6 +1162,6 @@ When the optional message argument is present, it is written to the log.</td>
 </tbody>
 </table>
 
-### Conclusion
+### * Conclusion
 
 *In this cheat sheet tutorial I have tried to consolidate most used Linux commands by different types of experts across IT domains. I am yet to add commands for many other scenarios such as Managing Linux services, archiving, firewall etc but that would just make this tutorial infinite long. I may write another article based on the response I get on this one, even writers need motivation. So that I know people are reading and loving this cheat sheet then I may decide to spend some more time to write about the remaining Linux commands in another tutorial.*
