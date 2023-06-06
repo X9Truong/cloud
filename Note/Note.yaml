@@ -1358,25 +1358,43 @@ awk '
     END { print "<<<END\n" }
 ' /etc/passwd
 
+How to list all enabled services from systemctl?
+
+systemctl list-unit-files | grep enabled
+
+systemctl list-unit-files --state=enabled
+
+
+To see 'enabled' services including these that are still under upstart/init run:
+
+systemctl list-unit-files --type service --state enabled,generated
+To see all of the currently running services run:
+
+systemctl list-units --type service --state running
 
 
 
+yum install bash-completion bash-completion-extras -y
+
+source /etc/profile.d/bash_completion.sh
+
+source <(kubectl completion bash) # thiết lập autocomplete trong bash vào shell hiện tại, gói bash-completion nên được cài đặt trước tiên 
+echo "source <(kubectl completion bash)" >> ~/.bashrc # thêm vĩnh viễn autocomplete vào trong bash shell
+
+vim .bashrc
+
+alias k=kubectl
+complete -F __start_kubectl k
 
 
+source .bashrc
 
+Install calico 
 
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.26.0/manifests/calico.yaml -O
+kubectl apply -f calico.yaml
 
-
-
-
-
-
-
-
-
-
-
-
+https://drive.google.com/uc?export=download&id=1Du79BxXiGlKNW_3uB_LAXe_qZTnI5nCY
 
 
 
