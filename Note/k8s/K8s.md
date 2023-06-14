@@ -1380,7 +1380,7 @@ helm install \
 ```	
 	
 ### Test ingress controller:
- 
+``` 
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -1527,4 +1527,4 @@ spec:
       secretName: cert-k8s	
 
  
- 
+```
