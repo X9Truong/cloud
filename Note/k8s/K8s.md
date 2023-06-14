@@ -1357,27 +1357,174 @@ server.listen(process.env.PORT, () => {
   console.log("Server listen on port ", process.env.PORT)
 })
 ```
+
+
+### Install helm
+
+`curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash`
+
+
+### Install cert-manager
+
+```
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.crds.yaml
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.12.0 \
+  # --set installCRDs=true
 	
+```	
+	
+### Test ingress controller:
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: html-demo
+data:
+  index1.html: |
+    Welcome to server 01
+  index2.html: |
+    Welcome to server 02
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx2
+  name: nginx2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx2
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx2
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: index2.html
+      volumes:
+        - name: config
+          configMap:
+            name: html-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: index1.html
+      volumes:
+        - name: config
+          configMap:
+            name: html-demo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: nginx
+    port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc2
+spec:
+  selector:
+    app: nginx2
+  ports:
+  - name: nginx2
+    port: 80
+    targetPort: 80
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: test01@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: k8s.lab.com
+      http:
+        paths:
+          - path: /index1(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-svc
+                port:
+                  number: 80
+          - path: /index2(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-svc2
+                port:
+                  number: 80
+  tls:
+    - hosts:
+      - k8s.lab.com
+      secretName: cert-k8s	
+
  
  
